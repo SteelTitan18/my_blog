@@ -1,0 +1,26 @@
+{% extends 'bloggings/model.html' %}
+
+{% block content %}
+
+<main>
+  <ul>
+    {% for post, comment in postD.items %}
+        <li id="post">
+          <span id="user">{{ post.user }}</span><br/>
+          <span id="post-content">
+            <span>{{ post.title }}</span><br/>
+            {{ post.content }}
+            <span>
+              <br/>Ajouté le {{ post.addDate }} à {{ post.addHour }}
+              <br/>Modifié le {{ post.modifDate }} à {{ post.modifHour }}
+            </span><br/>
+            <span>{{ comment }} commentaires</span>
+            &nbsp&nbsp <span>{{ post.like }} j'aime</span>
+            &nbsp&nbsp <span>{{ post.dislike }} j'aime pas</span>
+          </span>
+        </li>
+    {% endfor %}
+  </ul>
+</main>
+
+{% endblock %}
