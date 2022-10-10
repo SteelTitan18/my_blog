@@ -16,10 +16,13 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from bloggings import views
+from django.contrib.auth.models import User
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('home/', views.home, name="home"),
     path('sign-in/', views.connexion, name="connexion"),
+    path('logout/', views.logout_view, name="logout"),
     path('sign-up/', views.sign_up, name="sign-up"),
+    path('add/', views.addPost, name="add-post"),
 ]

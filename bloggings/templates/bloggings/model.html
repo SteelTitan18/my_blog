@@ -15,7 +15,12 @@
     <header>
       <h1>Nice Share</h1>
       <nav>
-        <a href="{% url 'connexion' %}">Se connecter</a>
+        {% if user in users %}
+          <h3>{{ user }}</h3>
+          <a href="{% url 'logout' %}">Se déconnecter</a>
+        {% else %}
+          <a href="{% url 'connexion' %}">Se connecter</a>
+        {% endif %}
       </nav>
     </header>
 
