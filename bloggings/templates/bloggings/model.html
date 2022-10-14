@@ -15,7 +15,7 @@
     <header>
       <h1>Nice Share</h1>
       <nav>
-        {% if user in users %}
+        {% if request.user.is_authenticated %}
           <h3>{{ user }}</h3>
           <a href="{% url 'logout' %}">Se déconnecter</a>
         {% else %}

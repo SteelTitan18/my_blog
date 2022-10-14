@@ -17,6 +17,13 @@
     </header>
 
     <main>
+      {% if messages %}
+        {% for message in messages %}
+          <script>
+            alert('{{ message }}');
+          </script>
+        {% endfor %}
+      {% endif %}
       <h2>Se connecter</h2>
       <form method="POST" action="">
           {% csrf_token %}

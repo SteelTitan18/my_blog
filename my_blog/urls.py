@@ -17,12 +17,17 @@ from django.contrib import admin
 from django.urls import path
 from bloggings import views
 from django.contrib.auth.models import User
+# from bloggings.views import PostListView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('home/', views.home, name="home"),
+    # path('home/', PostListView.as_view(), name="home"),
     path('sign-in/', views.connexion, name="connexion"),
     path('logout/', views.logout_view, name="logout"),
     path('sign-up/', views.sign_up, name="sign-up"),
-    path('add/', views.addPost, name="add-post"),
+    path('home/add', views.addPost, name="add-post"),
+    path('home/<int:post_id>/', views.DetailPost, name="details"),
+    # path('home/<int:post_id>/comment/', views.Commenting, name="comment"),
+    # path('home/<int:post_id>/', views.Commenting, name="commenting"),
 ]

@@ -5,34 +5,25 @@
 <main>
   <ul>
     {% for post, comment in postD.items %}
-        <li id="post">
-          <span id="user">{{ post.user }}</span><br/>
-          <span id="post-content">
-            <span>{{ post.title }}</span>&nbsp&nbsp&nbsp&nbsp{{ post.theme }}<br/>
-            {{ post.content }}
-            <span>
-              <br/>Ajouté le {{ post.addDate }} à {{ post.addHour }}
-              <br/>Modifié le {{ post.modifDate }} à {{ post.modifHour }}
-            </span><br/>
-            <span>{{ comment }} commentaires</span>
-            &nbsp&nbsp <span>{{ post.like }} j'aime</span>
-            &nbsp&nbsp <span>{{ post.dislike }} j'aime pas</span>
-          </span>
-        </li>
+      <a href="{% url 'details' post.id %}">
+          <li id="post">
+            <span id="user">{{ post.user }}</span><br/>
+            <span id="post-content">
+              <span>{{ post.title }}</span>&nbsp&nbsp&nbsp&nbsp{{ post.theme }}<br/>
+              {{ post.content }}
+              <span>
+                <br/>Ajouté le {{ post.addDate }} à {{ post.addHour }}
+                <br/>Modifié le {{ post.modifDate }} à {{ post.modifHour }}
+              </span><br/>
+              <span>{{ comment }} commentaires</span>
+              &nbsp&nbsp <span>{{ post.like }} j'aime</span>
+              &nbsp&nbsp <span>{{ post.dislike }} j'aime pas</span>
+            </span>
+          </li>
+        </a>
     {% endfor %}
   </ul>
-  <h2>Ajouter votre article</h2>
-  <form method="POST" action="">
-    {% csrf_token %}
-    <input type="text" name="title" placeholder="Titre"/><br/>
-    <input type="textarea" name="content" placeholder="Contenu"><br/>
-    <select name="theme">
-      {% for theme in themes %}
-        <option value={{ theme }}>{{ theme }}</option>
-      {% endfor %}
-    </select><br/>
-    <input type="submit" value="Ajouter"/>
-  </form>
+  <a href="{% url 'add-post' %}"><h2>Ajouter votre article</h2></a>
 </main>
 
 {% endblock %}
