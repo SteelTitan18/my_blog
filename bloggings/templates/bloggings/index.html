@@ -5,21 +5,24 @@
 <main>
   <ul>
     {% for post, comment in postD.items %}
-      <a href="{% url 'details' post.id %}">
+      <a class="posts" href="{% url 'details' post.id %}">
+        <HR NOSHADE>
           <li id="post">
             <span id="user">{{ post.user }}</span><br/>
             <span id="post-content">
-              <span>{{ post.title }}</span>&nbsp&nbsp&nbsp&nbsp{{ post.theme }}<br/>
-              {{ post.content }}
-              <span>
+              <span id="post-title">{{ post.title }}</span>
+              <span id="theme">Thème : {{ post.theme }}</span><br/>
+              <br/>{{ post.content|truncatechars:50 }}<br/>
+              <span id="info">
                 <br/>Ajouté le {{ post.addDate }} à {{ post.addHour }}
-                <br/>Modifié le {{ post.modifDate }} à {{ post.modifHour }}
+                <br />Modifié le {{ post.modifDate }} à {{ post.modifHour }}
               </span><br/>
-              <span>{{ comment }} commentaires</span>
-              &nbsp&nbsp <span>{{ post.like }} j'aime</span>
-              &nbsp&nbsp <span>{{ post.dislike }} j'aime pas</span>
+              <span class="action">{{ comment }} commentaire{{ comment|pluralize }}
+              &nbsp&nbsp{{ post.like }} j'aime
+              &nbsp&nbsp{{ post.dislike }} j'aime pas</span>
             </span>
           </li>
+          <HR NOSHADE>
         </a>
     {% endfor %}
   </ul>

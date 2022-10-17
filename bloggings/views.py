@@ -62,6 +62,7 @@ def sign_up(request):
 
 @login_required(login_url='/sign-in/')
 def addPost(request):
+    request.POST._mutable = True
     messages.add_message(request, messages.INFO,"Vous devez être connecté !")
     if request.method == 'POST':
         post = Post()
@@ -71,6 +72,11 @@ def addPost(request):
         # post.content = request.POST['content']
         # post.save()
         form = PostForm(request.POST, instance=post)
+        if request.POST["theme"] == "" and request.POST["new_theme"] != "":
+            theme = Theme()
+            theme.label = request.POST["new_theme"]
+            theme.save()
+            request.POST["theme"] = theme
         if form.is_valid():
             form.save()
             return redirect('home')
