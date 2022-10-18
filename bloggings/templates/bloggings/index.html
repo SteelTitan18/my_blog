@@ -3,30 +3,32 @@
 {% block content %}
 
 <main>
+  <h2 style="text-align: center">Articles</h2>
   <ul>
     {% for post, comment in postD.items %}
       <a class="posts" href="{% url 'details' post.id %}">
         <HR NOSHADE>
-          <li id="post">
-            <span id="user">{{ post.user }}</span><br/>
-            <span id="post-content">
-              <span id="post-title">{{ post.title }}</span>
-              <span id="theme">Thème : {{ post.theme }}</span><br/>
-              <br/>{{ post.content|truncatechars:50 }}<br/>
-              <span id="info">
+          <li class="post">
+            <span class="user"><i class="fa-solid fa-circle-user"></i>&nbsp&nbsp&nbsp{{ post.user }}</span><br/>
+            <span class="post-content">
+              <span class="post-title">{{ post.title }}</span>
+              &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+              <span class="theme">Thème : {{ post.theme }}</span><br/>
+              <br/>&nbsp&nbsp&nbsp&nbsp{{ post.content|truncatechars:50 }}<br/>
+              <span class="info">
                 <br/>Ajouté le {{ post.addDate }} à {{ post.addHour }}
                 <br />Modifié le {{ post.modifDate }} à {{ post.modifHour }}
               </span><br/>
-              <span class="action">{{ comment }} commentaire{{ comment|pluralize }}
-              &nbsp&nbsp{{ post.like }} j'aime
-              &nbsp&nbsp{{ post.dislike }} j'aime pas</span>
+              <span class="action">{{ comment }} <i class="fa-solid fa-comment"></i>
+              &nbsp&nbsp{{ post.like }}&nbsp<i class="fa-solid fa-thumbs-up"></i>&nbsp&nbsp&nbsp
+              &nbsp&nbsp{{ post.dislike }}&nbsp<i class="fa-solid fa-thumbs-down"></i>&nbsp&nbsp&nbsp</span>
             </span>
           </li>
           <HR NOSHADE>
         </a>
     {% endfor %}
   </ul>
-  <a href="{% url 'add-post' %}"><h2>Ajouter votre article</h2></a>
+  <a href="{% url 'add-post' %}" style="text-align: center"><h2>Ajouter votre article</h2></a>
 </main>
 
 {% endblock %}

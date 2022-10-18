@@ -21,7 +21,7 @@ def home(request):
         comment = Comment.objects.filter(post = _post).count()
         postDic[_post] = (comment)
     addPost(request)
-    return render(request, 'bloggings/index.html', {'postD':postDic, 'themes':themes,})
+    return render(request, 'bloggings/index.html', {'postD':postDic, 'themes':themes})
 
 # class PostListView(gnr.ListView):
 #     template_name = 'bloggings/index.html'
@@ -63,7 +63,7 @@ def sign_up(request):
 @login_required(login_url='/sign-in/')
 def addPost(request):
     request.POST._mutable = True
-    messages.add_message(request, messages.INFO,"Vous devez être connecté !")
+    # messages.add_message(request, messages.INFO,"Vous devez être connecté !")
     if request.method == 'POST':
         post = Post()
         post.user = request.user
@@ -91,15 +91,16 @@ def logout_view(request):
 
 def DetailPost(request, post_id):
     _post = Post.objects.get(id = post_id)
-    my_post = []
     comments = Comment.objects.filter(post = _post)
+    my_post = []
+    if request.user.is_authenticated:
+        my_post = Post.objects.filter(user = request.user)
 
     if request.method == 'POST':
         comment = Comment()
         if request.user.is_authenticated:
             comment.user = request.user
             comment.post = Post.objects.get(id = post_id)
-            my_post = Post.objects.filter(user = request.user)
             form = CommentForm(request.POST, instance=comment)
             if form.is_valid():
                 comment = form.save()
@@ -111,6 +112,44 @@ def DetailPost(request, post_id):
         form = CommentForm()
 
     return render(request, 'bloggings/post_detail.html', {'post': _post, 'comments':comments, 'my_post':my_post, 'form':form})
+
+def my_posts(request):
+    postDic = {}
+    postList = Post.objects.filter(user = request.user)
+    themes = Theme.objects.all()
+
+    for _post in postList:
+        comment = Comment.objects.filter(post = _post).count()
+        postDic[_post] = (comment)
+    addPost(request)
+    return render(request, 'bloggings/my_posts.html', {'postD':postDic, 'themes':themes})
+
+def profile(request):
+    return render(request, 'bloggings/user_profile.html')
+
+def modif_profile(request):
+    if request.method == 'POST':
+        pass
+
+def post_delete(request, post_id):
+    post = Post.objects.get(id = post_id)
+    post.delete()
+    return redirect('my-posts')
+
+    return render(request, 'listings/my_posts.html', {'post':post})
+
+def post_update(request, post_id):
+    post = Post.objects.get(id = post_id)
+
+    if request.method == 'POST':
+        form = PostForm(request.POST, instance=post)
+        if form.is_valid():
+            form.save()
+            return redirect('details', post.id)
+    else:
+        form = PostForm(instance=post)
+
+    return render(request, 'bloggings/post_update.html', {'form':form})
 
 # class DetailPost(gnr.DetailView):
 #     template_name = 'bloggings/post_detail.html'
