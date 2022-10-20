@@ -30,5 +30,15 @@ urlpatterns = [
     path('home/<int:post_id>/', views.DetailPost, name="details"),
     path('home/<int:post_id>/delete', views.post_delete, name="post-delete"),
     path('home/<int:post_id>/update/', views.post_update, name="post-update"),
-    # path('home/<int:post_id>/', views.Commenting, name="commenting"),
+    path('home/<int:post_id>/like', views.index_like, name="home-like"),
+    path('home/<int:post_id>/dislike', views.index_dislike, name="home-dislike"),
+    path('my_posts/<int:post_id>/like', views.my_post_like, name="mypost-like"),
+    path('my_posts/<int:post_id>/dislike', views.my_post_dislike, name="mypost-dislike"),
+    path('home/<int:post_id>/detail_like', views.detail_like, name="detail-like"),
+    path('home/<int:post_id>/detail_dislike', views.detail_dislike, name="detail-dislike"),
+    path('home/<int:post_id>/detail_like/<int:comment_id>/', views.comment_like, name="comment-like"),
+    path('home/<int:post_id>/detail_dislike/<int:comment_id>/', views.comment_dislike, name="comment-dislike"),
+    path('profile/', views.profile, name="profile"),
+    path('profile/modif', views.modif_profile, name="modif-profile")
+    # path(r'^post/search$', views.PostSearchListView.as_view(), name='post_search'),
 ]

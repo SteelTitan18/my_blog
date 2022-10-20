@@ -19,13 +19,13 @@
         {% if request.user.is_authenticated %}
           <div class="popup" onclick="myFunction()"><h3><i class="fa-solid fa-circle-user"></i>&nbsp&nbsp&nbsp{{ user }}</h3>
             <span class="popuptext" id="myPopup">
-              <a href=""><i class="fa-solid fa-user-pen"></i>&nbsp&nbsp&nbsp Mon profil</a><br/>
+              <a href="{% url 'profile' %}"><i class="fa-solid fa-user-pen"></i>&nbsp&nbsp&nbsp Mon profil</a><br/>
               <a href="{% url 'my-posts' %}"><i class="fa-solid fa-newspaper"></i>&nbsp&nbsp&nbsp Mes articles</a><br/>
               <a href="{% url 'logout' %}"><i class="fa-solid fa-right-from-bracket"></i>&nbsp&nbsp&nbsp Se déconnecter</a>
             </span>
           </div>
         {% else %}
-          <a href="{% url 'connexion' %}">Se connecter</a>
+          <a href="{% url 'connexion' %}"><h3><i class="fa-solid fa-right-to-bracket"></i>&nbsp&nbspSe connecter</h3></a>
         {% endif %}
       </nav>
     </header>

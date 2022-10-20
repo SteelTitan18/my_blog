@@ -11,6 +11,10 @@ from django.contrib.auth.decorators import login_required
 import django.views.generic as gnr
 from django.views.generic.edit import CreateView
 from django.contrib import messages
+# import operator
+# from functools import reduce
+# from django.views.generic.list import ListView
+# from django.db.models import Q
 
 def home(request):
     postDic = {}
@@ -128,8 +132,22 @@ def profile(request):
     return render(request, 'bloggings/user_profile.html')
 
 def modif_profile(request):
+    redirection = 'profile'
     if request.method == 'POST':
-        pass
+        user = request.user
+        pseudo = user.username
+        user.username = request.POST['username']
+        user.first_name = request.POST['first_name']
+        user.last_name = request.POST['last_name']
+        user.email = request.POST['email']
+        if user == authenticate(username = pseudo, password = request.POST['old_password']):
+            user.set_password(request.POST['new_password'])
+            redirection = 'connexion'
+        user.save()
+
+        return redirect('connexion')
+
+    return render(request, 'bloggings/modif_profile.html')
 
 def post_delete(request, post_id):
     post = Post.objects.get(id = post_id)
@@ -150,6 +168,93 @@ def post_update(request, post_id):
         form = PostForm(instance=post)
 
     return render(request, 'bloggings/post_update.html', {'form':form})
+
+@login_required(login_url='/sign-in/')
+def index_like(request, post_id):
+    post = Post.objects.get(id = post_id)
+    post.like = post.like + 1
+    post.save()
+
+    return redirect('home')
+
+@login_required(login_url='/sign-in/')
+def index_dislike(request, post_id):
+    post = Post.objects.get(id = post_id)
+    post.dislike = post.dislike + 1
+    post.save()
+
+    return redirect('home')
+
+@login_required(login_url='/sign-in/')
+def detail_like(request, post_id):
+    post = Post.objects.get(id = post_id)
+    post.like = post.like + 1
+    post.save()
+
+    return redirect('details', post.id)
+
+@login_required(login_url='/sign-in/')
+def detail_dislike(request, post_id):
+    post = Post.objects.get(id = post_id)
+    post.dislike = post.dislike + 1
+    post.save()
+
+    return redirect('details', post.id)
+
+@login_required(login_url='/sign-in/')
+def my_post_like(request, post_id):
+    post = Post.objects.get(id = post_id)
+    post.like = post.like + 1
+    post.save()
+
+    return redirect('my-posts')
+
+@login_required(login_url='/sign-in/')
+def my_post_dislike(request, post_id):
+    post = Post.objects.get(id = post_id)
+    post.dislike = post.dislike + 1
+    post.save()
+
+    return redirect('my-posts')
+
+@login_required(login_url='/sign-in/')
+def comment_like(request, post_id, comment_id):
+    post = Post.objects.get(id = post_id)
+    comment = Comment.objects.get(id = comment_id)
+    comment.like = comment.like + 1
+    comment.save()
+
+    return redirect('details', post.id)
+
+@login_required(login_url='/sign-in/')
+def comment_dislike(request, post_id, comment_id):
+    post = Post.objects.get(id = post_id)
+    comment = Comment.objects.get(id = comment_id)
+    comment.dislike = comment.dislike + 1
+    comment.save()
+
+    return redirect('details', post.id)
+
+# class PostSearchListView(ListView):
+#     model = Post
+#     context_object_name = "post_lst"
+#     template_name = "bloggings/index.html"
+#     paginate_by = 10
+#
+#     def get_queryset(self):
+#         result = super(PostSearchListView, self).get_queryset()
+#
+#         query = self.request.GET.get('q')
+#         if query:
+#             query_list = query.split()
+#             result = result.filter(
+#                 reduce(operator.and_,
+#                        (Q(title__icontains=q) for q in query_list)) |
+#                 reduce(operator.and_,
+#                        (Q(content__icontains=q) for q in query_list))
+#             )
+#
+#         return result
 
 # class DetailPost(gnr.DetailView):
 #     template_name = 'bloggings/post_detail.html'

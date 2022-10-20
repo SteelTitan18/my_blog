@@ -19,9 +19,16 @@
                 <br/>Ajouté le {{ post.addDate }} à {{ post.addHour }}
                 <br />Modifié le {{ post.modifDate }} à {{ post.modifHour }}
               </span><br/>
-              <span class="action">{{ comment }} <i class="fa-solid fa-comment"></i>
-              &nbsp&nbsp{{ post.like }}&nbsp<i class="fa-solid fa-thumbs-up"></i>&nbsp&nbsp&nbsp
-              &nbsp&nbsp{{ post.dislike }}&nbsp<i class="fa-solid fa-thumbs-down"></i>&nbsp&nbsp&nbsp</span>
+              <span class="action">{{ comment }}&nbsp<i class="fa-solid fa-comment"></i>
+              &nbsp&nbsp
+              <a class="action" href="{% url 'home-like' post.id %}">
+                {{ post.like }}&nbsp<i class="fa-solid fa-thumbs-up"></i>
+              </a>
+              &nbsp&nbsp&nbsp
+              <a class="action" href="{% url 'home-dislike' post.id %}">
+                {{ post.dislike }}&nbsp<i class="fa-solid fa-thumbs-down"></i>
+              </a>
+              &nbsp&nbsp&nbsp</span>
             </span>
           </li>
           <HR NOSHADE>
