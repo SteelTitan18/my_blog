@@ -3,7 +3,11 @@
 {% block content %}
 
 <main>
-  <h2 style="text-align: center">Articles</h2>
+  {% if result != None %}
+    <h2 style="text-align: center">Résultats pour "{{ result }}"</h2>
+  {% else %}
+    <h2 style="text-align: center">Articles</h2>
+  {% endif %}
   <ul>
     {% for post, comment in postD.items %}
       <a class="posts" href="{% url 'details' post.id %}">
@@ -35,7 +39,7 @@
         </a>
     {% endfor %}
   </ul>
-  <a href="{% url 'add-post' %}" style="text-align: center"><h2>Ajouter votre article</h2></a>
+  <a href="{% url 'add-post' %}" style="text-align: center; padding-top : 50%"><h2>Ajouter votre article</h2></a>
 </main>
 
 {% endblock %}

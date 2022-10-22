@@ -20,12 +20,24 @@ def home(request):
     postDic = {}
     postList = Post.objects.all()
     themes = Theme.objects.all()
+    posts = []
+
+    if request.method == "GET":
+        _request = request.GET.get('_request')
+        if _request is not None:
+            postList = list(Post.objects.filter(title__icontains = _request))
+            for th in themes:
+                if _request.lower() == th.label.lower():
+                    posts = list(Post.objects.filter(theme = th))
+            for post in posts:
+                if post not in postList:
+                    postList.append(post)
 
     for _post in postList:
         comment = Comment.objects.filter(post = _post).count()
         postDic[_post] = (comment)
     addPost(request)
-    return render(request, 'bloggings/index.html', {'postD':postDic, 'themes':themes})
+    return render(request, 'bloggings/index.html', {'postD':postDic, 'themes':themes, 'result':_request})
 
 # class PostListView(gnr.ListView):
 #     template_name = 'bloggings/index.html'
