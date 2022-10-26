@@ -37,6 +37,9 @@ def home(request):
         comment = Comment.objects.filter(post = _post).count()
         postDic[_post] = (comment)
     addPost(request)
+
+    # return redirect('home')
+
     return render(request, 'bloggings/index.html', {'postD':postDic, 'themes':themes, 'result':_request})
 
 # class PostListView(gnr.ListView):

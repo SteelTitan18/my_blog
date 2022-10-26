@@ -9,9 +9,9 @@
     <h2 style="text-align: center">Articles</h2>
   {% endif %}
   <ul>
+    <HR NOSHADE>
     {% for post, comment in postD.items %}
       <a class="posts" href="{% url 'details' post.id %}">
-        <HR NOSHADE>
           <li class="post">
             <span class="user"><i class="fa-solid fa-circle-user"></i>&nbsp&nbsp&nbsp{{ post.user }}</span><br/>
             <span class="post-content">
