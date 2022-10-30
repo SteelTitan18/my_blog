@@ -11,6 +11,8 @@ from django.contrib.auth.decorators import login_required
 import django.views.generic as gnr
 from django.views.generic.edit import CreateView
 from django.contrib import messages
+from PIL import Image
+from django.core.paginator import Paginator
 # import operator
 # from functools import reduce
 # from django.views.generic.list import ListView
@@ -18,7 +20,10 @@ from django.contrib import messages
 
 def home(request):
     postDic = {}
-    postList = Post.objects.all()
+    _postList = Post.objects.all().order_by('modifDate').reverse()
+    paginator = Paginator(_postList, 5)
+    number = request.GET.get('page')
+    postList = paginator.get_page(number)
     themes = Theme.objects.all()
     posts = []
 
@@ -40,7 +45,7 @@ def home(request):
 
     # return redirect('home')
 
-    return render(request, 'bloggings/index.html', {'postD':postDic, 'themes':themes, 'result':_request})
+    return render(request, 'bloggings/index.html', {'postD':postDic, 'themes':themes, 'result':_request, 'page_obj': postList})
 
 # class PostListView(gnr.ListView):
 #     template_name = 'bloggings/index.html'
@@ -90,7 +95,7 @@ def addPost(request):
         # post.theme = Theme.objects.get(label=request.POST['theme'])
         # post.content = request.POST['content']
         # post.save()
-        form = PostForm(request.POST, instance=post)
+        form = PostForm(request.POST, request.FILES, instance=post)
         if request.POST["theme"] == "" and request.POST["new_theme"] != "":
             theme = Theme()
             theme.label = request.POST["new_theme"]
@@ -110,6 +115,7 @@ def logout_view(request):
 
 def DetailPost(request, post_id):
     _post = Post.objects.get(id = post_id)
+    url = _post.illustration.name
     comments = Comment.objects.filter(post = _post)
     my_post = []
     if request.user.is_authenticated:
@@ -130,18 +136,22 @@ def DetailPost(request, post_id):
     else:
         form = CommentForm()
 
-    return render(request, 'bloggings/post_detail.html', {'post': _post, 'comments':comments, 'my_post':my_post, 'form':form})
+    return render(request, 'bloggings/post_detail.html', {'post': _post, 'comments':comments, 'my_post':my_post, 'form':form, 'len':len(comments), 'name':url})
 
 def my_posts(request):
     postDic = {}
-    postList = Post.objects.filter(user = request.user)
+    _postList = Post.objects.filter(user = request.user).order_by('modifDate').reverse()
+    # _postList = Post.objects.all().order_by('modifDate').reverse()
+    paginator = Paginator(_postList, 5)
+    number = request.GET.get('page')
+    postList = paginator.get_page(number)
     themes = Theme.objects.all()
 
     for _post in postList:
         comment = Comment.objects.filter(post = _post).count()
         postDic[_post] = (comment)
     addPost(request)
-    return render(request, 'bloggings/my_posts.html', {'postD':postDic, 'themes':themes})
+    return render(request, 'bloggings/my_posts.html', {'postD':postDic, 'themes':themes, 'page_obj': postList})
 
 def profile(request):
     return render(request, 'bloggings/user_profile.html')
@@ -187,7 +197,12 @@ def post_update(request, post_id):
 @login_required(login_url='/sign-in/')
 def index_like(request, post_id):
     post = Post.objects.get(id = post_id)
-    post.like = post.like + 1
+    if request.user not in post.like.all():
+        post.like.add(request.user)
+    else:
+        post.like.remove(request.user)
+    if request.user in post.dislike.all():
+        post.dislike.remove(request.user)
     post.save()
 
     return redirect('home')
@@ -195,7 +210,12 @@ def index_like(request, post_id):
 @login_required(login_url='/sign-in/')
 def index_dislike(request, post_id):
     post = Post.objects.get(id = post_id)
-    post.dislike = post.dislike + 1
+    if request.user not in post.dislike.all():
+        post.dislike.add(request.user)
+    else:
+        post.dislike.remove(request.user)
+    if request.user in post.like.all():
+        post.like.remove(request.user)
     post.save()
 
     return redirect('home')
@@ -203,7 +223,12 @@ def index_dislike(request, post_id):
 @login_required(login_url='/sign-in/')
 def detail_like(request, post_id):
     post = Post.objects.get(id = post_id)
-    post.like = post.like + 1
+    if request.user not in post.like.all():
+        post.like.add(request.user)
+    else:
+        post.like.remove(request.user)
+    if request.user in post.dislike.all():
+        post.dislike.remove(request.user)
     post.save()
 
     return redirect('details', post.id)
@@ -211,7 +236,12 @@ def detail_like(request, post_id):
 @login_required(login_url='/sign-in/')
 def detail_dislike(request, post_id):
     post = Post.objects.get(id = post_id)
-    post.dislike = post.dislike + 1
+    if request.user not in post.dislike.all():
+        post.dislike.add(request.user)
+    else:
+        post.dislike.remove(request.user)
+    if request.user in post.like.all():
+        post.like.remove(request.user)
     post.save()
 
     return redirect('details', post.id)
@@ -219,7 +249,12 @@ def detail_dislike(request, post_id):
 @login_required(login_url='/sign-in/')
 def my_post_like(request, post_id):
     post = Post.objects.get(id = post_id)
-    post.like = post.like + 1
+    if request.user not in post.like.all():
+        post.like.add(request.user)
+    else:
+        post.like.remove(request.user)
+    if request.user in post.dislike.all():
+        post.dislike.remove(request.user)
     post.save()
 
     return redirect('my-posts')
@@ -227,7 +262,12 @@ def my_post_like(request, post_id):
 @login_required(login_url='/sign-in/')
 def my_post_dislike(request, post_id):
     post = Post.objects.get(id = post_id)
-    post.dislike = post.dislike + 1
+    if request.user not in post.dislike.all():
+        post.dislike.add(request.user)
+    else:
+        post.dislike.remove(request.user)
+    if request.user in post.like.all():
+        post.like.remove(request.user)
     post.save()
 
     return redirect('my-posts')

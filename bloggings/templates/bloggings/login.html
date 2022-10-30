@@ -25,15 +25,15 @@
           </script>
         {% endfor %}
       {% endif %}
-      <h2>Se connecter</h2>
-      <form method="POST" action="">
+      <form class="login-form" method="POST" action="">
+        <h2>Se connecter</h2>
           {% csrf_token %}
           <input type="text" name="username" placeholder="login"/><br/>
           <input type="password" name="password" placeholder="password"/><br/>
           <input type="submit" value="Connexion"/>
+          </br></br>Vous n'avez pas encore de compte ?
+        <a style="text-decoration: underline; color: blue;" href="{% url 'sign-up' %}">Créer un compte</a>
       </form>
-      Vous n'avez pas encore de compte ?
-      <a href="{% url 'sign-up' %}">Créer un compte</a>
     </main>
 
     <footer></footer>
