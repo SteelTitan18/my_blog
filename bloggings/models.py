@@ -15,10 +15,10 @@ class Post(models.Model):
     like = models.ManyToManyField(User, related_name="liker")
     dislike = models.ManyToManyField(User, related_name="disliker")
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="poster")
-    addHour = models.TimeField(auto_now=True, auto_now_add=False)
-    modifHour = models.TimeField(auto_now=False, auto_now_add=True)
-    addDate = models.DateField(auto_now=True, auto_now_add=False)
-    modifDate = models.DateField(auto_now=False, auto_now_add=True)
+    modifHour = models.TimeField(auto_now=True, auto_now_add=False)
+    addHour = models.TimeField(auto_now=False, auto_now_add=True)
+    modifDate = models.DateField(auto_now=True, auto_now_add=False)
+    addDate = models.DateField(auto_now=False, auto_now_add=True)
 
     def __str__(self):
         return self.title

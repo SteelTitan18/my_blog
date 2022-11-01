@@ -3,6 +3,10 @@
 {% block content %}
 
 <main>
+  <form class="search-area">
+    <input type="search" placeholder="Rechercher..." name="_request" />
+    <button class="search-button" type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
+  </form>
   {% if result != None %}
     <h2 style="text-align: center">Résultats pour "{{ result }}"</h2>
   {% else %}
@@ -62,6 +66,13 @@
         {% endif %}
       </span>
   </div>
+  <script>
+// When the user clicks on <div>, open the popup
+    function myFunction() {
+      var popup = document.getElementById("myPopup");
+      popup.classList.toggle("show");
+    }
+  </script>
 </main>
 
 {% endblock %}

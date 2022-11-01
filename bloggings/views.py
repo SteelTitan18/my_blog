@@ -276,7 +276,12 @@ def my_post_dislike(request, post_id):
 def comment_like(request, post_id, comment_id):
     post = Post.objects.get(id = post_id)
     comment = Comment.objects.get(id = comment_id)
-    comment.like = comment.like + 1
+    if request.user not in comment.like.all():
+        comment.like.add(request.user)
+    else:
+        comment.like.remove(request.user)
+    if request.user in comment.dislike.all():
+        comment.dislike.remove(request.user)
     comment.save()
 
     return redirect('details', post.id)
@@ -285,7 +290,12 @@ def comment_like(request, post_id, comment_id):
 def comment_dislike(request, post_id, comment_id):
     post = Post.objects.get(id = post_id)
     comment = Comment.objects.get(id = comment_id)
-    comment.dislike = comment.dislike + 1
+    if request.user not in comment.dislike.all():
+        comment.dislike.add(request.user)
+    else:
+        comment.dislike.remove(request.user)
+    if request.user in comment.like.all():
+        comment.like.remove(request.user)
     comment.save()
 
     return redirect('details', post.id)
